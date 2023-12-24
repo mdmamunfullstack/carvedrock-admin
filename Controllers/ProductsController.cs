@@ -27,9 +27,10 @@ namespace carvedrock_admin.Controllers
             return product == null ? NotFound() : View(product);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var model = await _logic.InitializeProductModel();
+            return View(model);
         }
 
         // POST: ProductsData/Create
@@ -39,12 +40,14 @@ namespace carvedrock_admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductModel product)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _logic.AddNewProduct(product);
-                return RedirectToAction(nameof(Index));
+                await _logic.GetAvailableCategories(product);
+                return View(product);
             }
-            return View(product);
+            await _logic.AddNewProduct(product);
+            return RedirectToAction(nameof(Index));
+        
         }
 
         // GET: ProductsData/Edit/5
@@ -61,6 +64,8 @@ namespace carvedrock_admin.Controllers
                 return NotFound();
             }
 
+
+            await _logic.GetAvailableCategories(productModel);
             return View(productModel);
         }
 

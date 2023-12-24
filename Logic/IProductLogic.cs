@@ -9,5 +9,8 @@ namespace carvedrock_admin
         Task AddNewProduct(ProductModel productToAdd);
         Task RemoveProduct(int id);
         Task UpdateProduct(ProductModel productToUpdate);
+
+        Task<ProductModel> InitializeProductModel();
+        Task GetAvailableCategories(ProductModel productModel);
     }
 }

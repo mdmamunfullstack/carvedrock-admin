@@ -10,5 +10,10 @@ namespace carvedrock_admin.Repository
         Task<Product> AddProductAsync(Product product);
         Task UpdateProductAsync(Product product);
         Task RemoveProductAsync(int productIdToRemove);
+
+
+
+        Task<List<Category>> GetAllCategoriesAsync();
+        Task<Category?> GetCategoryByIdAsync(int categoryId);
     }
 }
