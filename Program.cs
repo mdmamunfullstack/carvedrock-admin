@@ -1,6 +1,8 @@
+using carvedrock_admin.Areas.Identity.Data;
 using carvedrock_admin.Data;
 using carvedrock_admin.Repository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace carvedrock_admin
 {
@@ -9,10 +11,38 @@ namespace carvedrock_admin
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+
             builder.Services.AddDbContext<ProductContext>();
+
+
+            builder.Services.AddDbContext<AdminContext>();
+
+            builder.Services.AddDefaultIdentity<AdminUser>(options =>
+                    {
+                        options.SignIn.RequireConfirmedAccount = true;
+
+                        options.Password.RequireDigit = false;
+                        options.Password.RequireLowercase = false;
+                        options.Password.RequireNonAlphanumeric = true;
+                        options.Password.RequireUppercase = false;
+                        options.Password.RequiredLength = 6;
+                        options.Password.RequiredUniqueChars = 1;
+
+                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                        options.Lockout.MaxFailedAccessAttempts = 5;
+                        options.Lockout.AllowedForNewUsers = true;
+
+                        options.User.AllowedUserNameCharacters =
+                            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                        options.User.RequireUniqueEmail = false;
+                    }
+                ).AddEntityFrameworkStores<AdminContext>();
+                
             builder.Services.AddScoped<ICarvedRockRepository, CarvedRockRepository>();
             builder.Services.AddScoped<IProductLogic, ProductLogic>();
 
@@ -24,6 +54,11 @@ namespace carvedrock_admin
             {
                 var services = scope.ServiceProvider;
                 var ctx = services.GetRequiredService<ProductContext>();
+
+                var userCtx = services.GetRequiredService<AdminContext>();
+                userCtx.Database.Migrate();
+
+
                 ctx.Database.Migrate();
 
                 if (app.Environment.IsDevelopment())
@@ -46,7 +81,10 @@ namespace carvedrock_admin
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",

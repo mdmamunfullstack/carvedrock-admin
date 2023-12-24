@@ -1,4 +1,4 @@
-# MVC Crash Course - ASP.NET Core 6
+# MVC Crash Course - ASP.NET Core 8
 
 ## Prerequisites
 

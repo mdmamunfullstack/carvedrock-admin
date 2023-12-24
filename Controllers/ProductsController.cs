@@ -1,10 +1,12 @@
 ﻿using carvedrock_admin.Data;
 using carvedrock_admin.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace carvedrock_admin.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly IProductLogic _logic;
