@@ -16,12 +16,11 @@ namespace carvedrock_admin
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-
+            // Add DbContext
             builder.Services.AddDbContext<ProductContext>();
-
-
             builder.Services.AddDbContext<AdminContext>();
 
+            //Add Identity
             builder.Services.AddDefaultIdentity<AdminUser>(options =>
                     {
                         options.SignIn.RequireConfirmedAccount = true;
@@ -49,7 +48,7 @@ namespace carvedrock_admin
 
             var app = builder.Build();
 
-
+            //Add Migrations
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
